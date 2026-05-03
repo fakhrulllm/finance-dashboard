@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const API_URL = "http://localhost:3000/transactions"
+const API_URL = import.meta.env.VITE_API_URL
 
 export const getTransactions = async () => {
     const { data } = await axios.get(API_URL)

@@ -18,10 +18,7 @@ function App() {
 
   // ================= STATE =================
   const [activeMenu, setActiveMenu] = useState("Dashboard")
-  const [transactionsData, setTransactionsData] = useState(() => {
-    const saved = localStorage.getItem("transactions")
-    return saved ? JSON.parse(saved) : initialData
-  })
+  const [transactionsData, setTransactionsData] = useState(transactions || [])
   const [filter, setFilter] = useState("all")
   const [loading, setLoading] = useState(false)
 
