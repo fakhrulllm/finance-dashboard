@@ -19,7 +19,7 @@ function App() {
 
   const menuItems = ["Dashboard", "Reports", "Settings"]
 
-  // ✅ LOAD
+  // ================= LOAD =================
   useEffect(() => {
     const saved = localStorage.getItem("transactions")
     if (saved) {
@@ -27,34 +27,34 @@ function App() {
     }
   }, [])
 
-  // ✅ SAVE
+  // ================= SAVE =================
   useEffect(() => {
     localStorage.setItem("transactions", JSON.stringify(transactionsData))
   }, [transactionsData])
 
-  // ✅ ADD
+  // ================= ADD =================
   const handleAddTransaction = (newData) => {
     setTransactionsData(prev => [newData, ...prev])
   }
 
-  // ✅ DELETE
+  // ================= DELETE =================
   const handleDelete = (id) => {
     setTransactionsData(prev =>
       prev.filter(item => item.id !== id)
     )
   }
 
-  // ✅ RESET
+  // ================= RESET =================
   const handleReset = () => {
-    if (!confirm("Hapus semua data?")) return
+    if (!window.confirm("Yakin hapus semua data?")) return
     setTransactionsData([])
     localStorage.removeItem("transactions")
   }
 
-  // ✅ EXPORT EXCEL
+  // ================= EXPORT EXCEL =================
   const handleExport = () => {
     if (transactionsData.length === 0) {
-      alert("Tidak ada data")
+      alert("Tidak ada data untuk di export")
       return
     }
 
@@ -75,13 +75,13 @@ function App() {
     saveAs(blob, "transactions.xlsx")
   }
 
-  // ✅ FILTER
+  // ================= FILTER =================
   const filteredTransactions =
     filter === "all"
       ? transactionsData
       : transactionsData.filter(t => t.type === filter)
 
-  // ✅ SUMMARY
+  // ================= SUMMARY =================
   const totalIncome = transactionsData
     .filter(t => t.type === "income")
     .reduce((acc, t) => acc + (t.amount || 0), 0)
@@ -98,7 +98,7 @@ function App() {
     { title: "Expense", value: totalExpense }
   ]
 
-  // ✅ REPORT
+  // ================= REPORT =================
   const monthlyData = transactionsData.reduce((acc, item) => {
     const month = item.date?.slice(3, 10)
     if (!month) return acc
@@ -121,6 +121,7 @@ function App() {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-teal-50 via-white to-teal-100">
 
+      {/* SIDEBAR */}
       <Sidebar
         title="Finance Dashboard"
         menu={menuItems}
@@ -128,19 +129,23 @@ function App() {
         setActiveMenu={setActiveMenu}
       />
 
+      {/* MAIN */}
       <div className="flex-1 p-8 space-y-8">
 
         <Navbar username="Fakhrul" activeMenu={activeMenu} />
 
+        {/* DASHBOARD */}
         {activeMenu === "Dashboard" && (
           <div className="space-y-6">
 
+            {/* CARDS */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {summaryCards.map((item, i) => (
                 <Card key={i} {...item} />
               ))}
             </div>
 
+            {/* LIST */}
             <TransactionList
               data={filteredTransactions}
               setFilter={setFilter}
@@ -148,35 +153,40 @@ function App() {
               onDelete={handleDelete}
             />
 
+            {/* FORM */}
             <AddTransaction onAdd={handleAddTransaction} />
 
+            {/* CHART */}
             <FinanceChart data={transactionsData} />
 
           </div>
         )}
 
+        {/* REPORTS */}
         {activeMenu === "Reports" && (
           <div className="space-y-6">
 
-            <div className="grid grid-cols-3 gap-4">
-              <div className="bg-white p-5 rounded shadow">
-                <p>Total Transactions</p>
-                <h2>{totalTransactions}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+              <div className="bg-white p-5 rounded-2xl shadow">
+                <p className="text-gray-500">Total Transactions</p>
+                <h2 className="text-xl font-bold">{totalTransactions}</h2>
               </div>
 
-              <div className="bg-white p-5 rounded shadow">
-                <p>Total Income</p>
-                <h2 className="text-green-500">
-                  Rp {totalIncome.toLocaleString()}
+              <div className="bg-white p-5 rounded-2xl shadow">
+                <p className="text-gray-500">Total Income</p>
+                <h2 className="text-xl font-bold text-green-500">
+                  Rp {totalIncome.toLocaleString("id-ID")}
                 </h2>
               </div>
 
-              <div className="bg-white p-5 rounded shadow">
-                <p>Total Expense</p>
-                <h2 className="text-red-500">
-                  Rp {totalExpense.toLocaleString()}
+              <div className="bg-white p-5 rounded-2xl shadow">
+                <p className="text-gray-500">Total Expense</p>
+                <h2 className="text-xl font-bold text-red-500">
+                  Rp {totalExpense.toLocaleString("id-ID")}
                 </h2>
               </div>
+
             </div>
 
             <ReportsChart data={chartData} />
@@ -184,25 +194,26 @@ function App() {
           </div>
         )}
 
+        {/* SETTINGS */}
         {activeMenu === "Settings" && (
-          <div className="bg-white p-6 rounded shadow space-y-4">
+          <div className="bg-white p-6 rounded-2xl shadow space-y-4">
 
-            <h2 className="font-bold">Data Tools</h2>
+            <h2 className="text-xl font-bold">Data Tools</h2>
 
             <div className="flex gap-4">
 
               <button
                 onClick={handleReset}
-                className="px-4 py-2 bg-red-500 text-white rounded"
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition"
               >
-                Reset Data
+                Reset Data 🗑️
               </button>
 
               <button
                 onClick={handleExport}
-                className="px-4 py-2 bg-green-600 text-white rounded"
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition"
               >
-                Export Excel
+                Export Excel 📊
               </button>
 
             </div>
