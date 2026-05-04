@@ -219,7 +219,7 @@ function App() {
                 onClick={handleExport}
                 className="px-4 py-2 bg-teal-600 text-white rounded-lg"
               >
-                Export JSON
+                Export Excel
               </button>
 
             </div>
