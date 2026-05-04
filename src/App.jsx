@@ -8,17 +8,15 @@ import AddTransaction from "./components/AddTransaction"
 import FinanceChart from "./components/FinanceChart"
 import ReportsChart from "./components/ReportsChart"
 
-
 function App() {
 
   const [activeMenu, setActiveMenu] = useState("Dashboard")
   const [transactionsData, setTransactionsData] = useState([])
   const [filter, setFilter] = useState("all")
-  const [loading, setLoading] = useState(false)
 
   const menuItems = ["Dashboard", "Reports", "Settings"]
 
-  // ================= FETCH =================
+  // ================= LOAD LOCAL STORAGE =================
   useEffect(() => {
     const saved = localStorage.getItem("transactions")
     if (saved) {
@@ -26,55 +24,28 @@ function App() {
     }
   }, [])
 
-  const fetchData = async () => {
-    setLoading(true)
-    try {
-      const data = await getTransactions()
-      setTransactionsData(data || [])
-    } catch (err) {
-      console.error("Fetch error:", err)
-      setTransactionsData([]) // safety
-    } finally {
-      setLoading(false)
-    }
-  }
+  // ================= SAVE LOCAL STORAGE =================
+  useEffect(() => {
+    localStorage.setItem("transactions", JSON.stringify(transactionsData))
+  }, [transactionsData])
 
   // ================= CRUD =================
-  const handleAddTransaction = async (newData) => {
-    try {
-      const saved = await addTransactionApi(newData)
-      setTransactionsData(prev => [saved, ...prev])
-    } catch (err) {
-      console.error("Add error:", err)
-    }
+  const handleAddTransaction = (newData) => {
+    setTransactionsData(prev => [newData, ...prev])
   }
 
-  const handleDelete = async (id) => {
-    try {
-      await deleteTransactionApi(id)
-      setTransactionsData(prev =>
-        prev.filter(item => item.id !== id)
-      )
-    } catch (err) {
-      console.error("Delete error:", err)
-    }
+  const handleDelete = (id) => {
+    setTransactionsData(prev =>
+      prev.filter(item => item.id !== id)
+    )
   }
 
   // ================= RESET =================
-  const handleReset = async () => {
+  const handleReset = () => {
     if (!confirm("Hapus semua data?")) return
 
-    try {
-      const all = await getTransactions()
-
-      await Promise.all(
-        all.map(item => deleteTransactionApi(item.id))
-      )
-
-      setTransactionsData([])
-    } catch (err) {
-      console.error("Reset error:", err)
-    }
+    setTransactionsData([])
+    localStorage.removeItem("transactions")
   }
 
   // ================= EXPORT =================
@@ -151,12 +122,8 @@ function App() {
 
         <Navbar username="Fakhrul" activeMenu={activeMenu} />
 
-        {loading && (
-          <p className="text-center text-gray-500">Loading...</p>
-        )}
-
         {/* DASHBOARD */}
-        {activeMenu === "Dashboard" && !loading && (
+        {activeMenu === "Dashboard" && (
           <div className="space-y-6">
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
