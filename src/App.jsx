@@ -8,83 +8,72 @@ import AddTransaction from "./components/AddTransaction"
 import FinanceChart from "./components/FinanceChart"
 import ReportsChart from "./components/ReportsChart"
 
-import {
-  getTransactions,
-  addTransactionApi,
-  deleteTransactionApi
-} from "./api/transactionApi"
 
 function App() {
 
-  // ================= STATE =================
   const [activeMenu, setActiveMenu] = useState("Dashboard")
-  const [transactionsData, setTransactionsData] = useState(transactions || [])
+  const [transactionsData, setTransactionsData] = useState([])
   const [filter, setFilter] = useState("all")
   const [loading, setLoading] = useState(false)
 
   const menuItems = ["Dashboard", "Reports", "Settings"]
 
-  // ================= FETCH API =================
+  // ================= FETCH =================
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getTransactions()
-
-        // hanya isi kalau localStorage kosong
-        const saved = localStorage.getItem("transactions")
-
-        if (!saved) {
-          setTransactionsData(data)
-        }
-      } catch (err) {
-        console.error(err)
-      }
+    const saved = localStorage.getItem("transactions")
+    if (saved) {
+      setTransactionsData(JSON.parse(saved))
     }
-
-    fetchData()
   }, [])
 
-  // ================= LOCAL STORAGE =================
-  useEffect(() => {
-    localStorage.setItem("transactions", JSON.stringify(transactionsData))
-  }, [transactionsData])
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      const data = await getTransactions()
+      setTransactionsData(data || [])
+    } catch (err) {
+      console.error("Fetch error:", err)
+      setTransactionsData([]) // safety
+    } finally {
+      setLoading(false)
+    }
+  }
 
   // ================= CRUD =================
   const handleAddTransaction = async (newData) => {
     try {
       const saved = await addTransactionApi(newData)
-
-      setTransactionsData(prev => {
-        const updated = [saved, ...prev]
-        localStorage.setItem("transactions", JSON.stringify(updated))
-        return updated
-      })
-
+      setTransactionsData(prev => [saved, ...prev])
     } catch (err) {
-      console.error(err)
+      console.error("Add error:", err)
     }
   }
 
   const handleDelete = async (id) => {
     try {
       await deleteTransactionApi(id)
-
-      setTransactionsData(prev => {
-        const updated = prev.filter(item => item.id !== id)
-        localStorage.setItem("transactions", JSON.stringify(updated))
-        return updated
-      })
-
+      setTransactionsData(prev =>
+        prev.filter(item => item.id !== id)
+      )
     } catch (err) {
-      console.error(err)
+      console.error("Delete error:", err)
     }
   }
 
   // ================= RESET =================
-  const handleReset = () => {
-    if (confirm("Hapus semua data?")) {
+  const handleReset = async () => {
+    if (!confirm("Hapus semua data?")) return
+
+    try {
+      const all = await getTransactions()
+
+      await Promise.all(
+        all.map(item => deleteTransactionApi(item.id))
+      )
+
       setTransactionsData([])
-      localStorage.removeItem("transactions") // 🔥 fix biar beneran kosong
+    } catch (err) {
+      console.error("Reset error:", err)
     }
   }
 
@@ -112,11 +101,11 @@ function App() {
   // ================= SUMMARY =================
   const totalIncome = transactionsData
     .filter(t => t.type === "income")
-    .reduce((acc, t) => acc + t.amount, 0)
+    .reduce((acc, t) => acc + (t.amount || 0), 0)
 
   const totalExpense = transactionsData
     .filter(t => t.type === "expense")
-    .reduce((acc, t) => acc + t.amount, 0)
+    .reduce((acc, t) => acc + (t.amount || 0), 0)
 
   const totalBalance = totalIncome - totalExpense
 
@@ -126,15 +115,17 @@ function App() {
     { title: "Expense", value: totalExpense }
   ]
 
-  // ================= REPORT DATA =================
+  // ================= REPORT =================
   const monthlyData = transactionsData.reduce((acc, item) => {
-    const month = item.date.slice(3, 10)
+    const month = item.date?.slice(3, 10)
+
+    if (!month) return acc
 
     if (!acc[month]) {
       acc[month] = { income: 0, expense: 0 }
     }
 
-    acc[month][item.type] += item.amount
+    acc[month][item.type] += item.amount || 0
     return acc
   }, {})
 
@@ -149,7 +140,6 @@ function App() {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-teal-50 via-white to-teal-100">
 
-      {/* SIDEBAR */}
       <Sidebar
         title="Finance Dashboard"
         menu={menuItems}
@@ -157,7 +147,6 @@ function App() {
         setActiveMenu={setActiveMenu}
       />
 
-      {/* MAIN */}
       <div className="flex-1 p-8 space-y-8">
 
         <Navbar username="Fakhrul" activeMenu={activeMenu} />
@@ -170,14 +159,12 @@ function App() {
         {activeMenu === "Dashboard" && !loading && (
           <div className="space-y-6">
 
-            {/* CARDS */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {summaryCards.map((item, i) => (
                 <Card key={i} {...item} />
               ))}
             </div>
 
-            {/* LIST */}
             <TransactionList
               data={filteredTransactions}
               setFilter={setFilter}
@@ -185,10 +172,8 @@ function App() {
               onDelete={handleDelete}
             />
 
-            {/* FORM */}
             <AddTransaction onAdd={handleAddTransaction} />
 
-            {/* CHART */}
             <FinanceChart data={transactionsData} />
 
           </div>
@@ -200,20 +185,20 @@ function App() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-              <div className="bg-white/80 backdrop-blur p-5 rounded-2xl shadow">
-                <p className="text-gray-500">Total Transactions</p>
+              <div className="bg-white/80 p-5 rounded-2xl shadow">
+                <p>Total Transactions</p>
                 <h2 className="text-xl font-bold">{totalTransactions}</h2>
               </div>
 
-              <div className="bg-white/80 backdrop-blur p-5 rounded-2xl shadow">
-                <p className="text-gray-500">Total Income</p>
+              <div className="bg-white/80 p-5 rounded-2xl shadow">
+                <p>Total Income</p>
                 <h2 className="text-xl font-bold text-green-500">
                   Rp {totalIncome.toLocaleString()}
                 </h2>
               </div>
 
-              <div className="bg-white/80 backdrop-blur p-5 rounded-2xl shadow">
-                <p className="text-gray-500">Total Expense</p>
+              <div className="bg-white/80 p-5 rounded-2xl shadow">
+                <p>Total Expense</p>
                 <h2 className="text-xl font-bold text-red-500">
                   Rp {totalExpense.toLocaleString()}
                 </h2>
@@ -228,7 +213,7 @@ function App() {
 
         {/* SETTINGS */}
         {activeMenu === "Settings" && (
-          <div className="bg-white/80 backdrop-blur p-6 rounded-2xl shadow space-y-4">
+          <div className="bg-white/80 p-6 rounded-2xl shadow space-y-4">
 
             <h2 className="text-xl font-bold">Data Tools</h2>
 
