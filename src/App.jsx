@@ -7,6 +7,8 @@ import TransactionList from "./components/TransactionList"
 import AddTransaction from "./components/AddTransaction"
 import FinanceChart from "./components/FinanceChart"
 import ReportsChart from "./components/ReportsChart"
+import * as XLSX from "xlsx"
+import { saveAs } from "file-saver"
 
 function App() {
 
@@ -50,17 +52,37 @@ function App() {
 
   // ================= EXPORT =================
   const handleExport = () => {
-    const blob = new Blob(
-      [JSON.stringify(transactionsData, null, 2)],
-      { type: "application/json" }
-    )
+    if (transactionsData.length === 0) {
+      alert("Tidak ada data untuk di export")
+      return
+    }
 
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
+    // format data biar rapi di excel
+    const formatted = transactionsData.map(item => ({
+      Nama: item.name,
+      Tanggal: item.date,
+      Tipe: item.type,
+      Jumlah: `Rp ${item.amount.toLocaleString("id-ID")}` // 🔥 DISINI
+    }))
 
-    a.href = url
-    a.download = "transactions.json"
-    a.click()
+    // buat worksheet
+    const worksheet = XLSX.utils.json_to_sheet(formatted)
+
+    // buat workbook
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions")
+
+    // convert ke binary
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array"
+    })
+
+    const blob = new Blob([excelBuffer], {
+      type: "application/octet-stream"
+    })
+
+    saveAs(blob, "transactions.xlsx")
   }
 
   // ================= FILTER =================
