@@ -100,11 +100,19 @@ src/
 
 ## 🎯 Future Improvements
 
-* 🔐 Authentication (Login/Register)
-* ☁️ Backend integration (Node.js / Firebase)
-* 📊 Advanced analytics
-* 🌙 Dark mode
-* 📱 Mobile app version
+### Near-term (Frontend Focus)
+- 🔍 Search & filter transaksi
+- 📅 Filter berdasarkan tanggal
+- 📊 Monthly summary
+- 💾 Import & export data
+- 🎨 UI improvements
+
+### Long-term
+- 🔐 Authentication system
+- ☁️ Backend integration
+- 📊 Advanced analytics dashboard
+- 🌙 Dark mode
+- 📱 Mobile app version
 
 ---
 
