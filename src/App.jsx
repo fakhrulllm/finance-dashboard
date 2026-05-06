@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { Routes, Route } from "react-router-dom"
 
 import Card from "./components/Card"
 import Sidebar from "./components/Sidebar"
@@ -12,12 +13,9 @@ import * as XLSX from "xlsx"
 import { saveAs } from "file-saver"
 
 function App() {
-  const [activeMenu, setActiveMenu] = useState("Dashboard")
   const [transactionsData, setTransactionsData] = useState([])
   const [filter, setFilter] = useState("all")
   const [loading, setLoading] = useState(true)
-
-  const menuItems = ["Dashboard", "Reports", "Settings"]
 
   // LOAD
   useEffect(() => {
@@ -125,111 +123,110 @@ function App() {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-teal-50 via-white to-teal-100">
 
-      <Sidebar
-        title="Finance Dashboard"
-        menu={menuItems}
-        activeMenu={activeMenu}
-        setActiveMenu={setActiveMenu}
-      />
+      <Sidebar />
 
       <div className="flex-1 p-8 space-y-8">
 
-        <Navbar username="Fakhrul" activeMenu={activeMenu} />
+        <Navbar username="Fakhrul" />
 
-        {/* DASHBOARD */}
-        {activeMenu === "Dashboard" && (
-          loading ? (
-            <p className="text-center text-gray-400 animate-pulse">
-              Loading data...
-            </p>
-          ) : (
+        <Routes>
+
+          {/* DASHBOARD */}
+          <Route path="/" element={
+            loading ? (
+              <p className="text-center text-gray-400 animate-pulse">
+                Loading data...
+              </p>
+            ) : (
+              <div className="space-y-6">
+
+                {transactionsData.length === 0 && (
+                  <p className="text-center text-gray-400">
+                    No transactions yet 💸
+                  </p>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {summaryCards.map((item, i) => (
+                    <Card key={i} {...item} />
+                  ))}
+                </div>
+
+                <TransactionList
+                  data={filteredTransactions}
+                  setFilter={setFilter}
+                  filter={filter}
+                  onDelete={handleDelete}
+                />
+
+                <AddTransaction onAdd={handleAddTransaction} />
+
+                <FinanceChart data={transactionsData} />
+
+              </div>
+            )
+          } />
+
+          {/* REPORTS */}
+          <Route path="/reports" element={
             <div className="space-y-6">
 
-              {transactionsData.length === 0 && (
-                <p className="text-center text-gray-400">
-                  No transactions yet 💸
-                </p>
-              )}
-
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {summaryCards.map((item, i) => (
-                  <Card key={i} {...item} />
-                ))}
+
+                <div className="bg-white p-5 rounded-2xl shadow">
+                  <p className="text-gray-500">Total Transactions</p>
+                  <h2 className="text-xl font-bold">{totalTransactions}</h2>
+                </div>
+
+                <div className="bg-white p-5 rounded-2xl shadow">
+                  <p className="text-gray-500">Total Income</p>
+                  <h2 className="text-xl font-bold text-green-500">
+                    Rp {totalIncome.toLocaleString("id-ID")}
+                  </h2>
+                </div>
+
+                <div className="bg-white p-5 rounded-2xl shadow">
+                  <p className="text-gray-500">Total Expense</p>
+                  <h2 className="text-xl font-bold text-red-500">
+                    Rp {totalExpense.toLocaleString("id-ID")}
+                  </h2>
+                </div>
+
               </div>
 
-              <TransactionList
-                data={filteredTransactions}
-                setFilter={setFilter}
-                filter={filter}
-                onDelete={handleDelete}
-              />
-
-              <AddTransaction onAdd={handleAddTransaction} />
-
-              <FinanceChart data={transactionsData} />
+              <ReportsChart data={chartData} />
 
             </div>
-          )
-        )}
+          } />
 
-        {/* REPORTS */}
-        {activeMenu === "Reports" && (
-          <div className="space-y-6">
+          {/* SETTINGS */}
+          <Route path="/settings" element={
+            <div className="bg-white p-6 rounded-2xl shadow space-y-4">
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <h2 className="text-xl font-bold">Data Tools</h2>
 
-              <div className="bg-white p-5 rounded-2xl shadow">
-                <p className="text-gray-500">Total Transactions</p>
-                <h2 className="text-xl font-bold">{totalTransactions}</h2>
-              </div>
+              <div className="flex gap-4">
 
-              <div className="bg-white p-5 rounded-2xl shadow">
-                <p className="text-gray-500">Total Income</p>
-                <h2 className="text-xl font-bold text-green-500">
-                  Rp {totalIncome.toLocaleString("id-ID")}
-                </h2>
-              </div>
+                <button
+                  onClick={handleReset}
+                  className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                >
+                  Reset Data
+                </button>
 
-              <div className="bg-white p-5 rounded-2xl shadow">
-                <p className="text-gray-500">Total Expense</p>
-                <h2 className="text-xl font-bold text-red-500">
-                  Rp {totalExpense.toLocaleString("id-ID")}
-                </h2>
+                <button
+                  onClick={handleExport}
+                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+                >
+                  Export Excel
+                </button>
+
               </div>
 
             </div>
+          } />
 
-            <ReportsChart data={chartData} />
-
-          </div>
-        )}
-
-        {/* SETTINGS */}
-        {activeMenu === "Settings" && (
-          <div className="bg-white p-6 rounded-2xl shadow space-y-4">
-
-            <h2 className="text-xl font-bold">Data Tools</h2>
-
-            <div className="flex gap-4">
-
-              <button
-                onClick={handleReset}
-                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
-              >
-                Reset Data
-              </button>
-
-              <button
-                onClick={handleExport}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
-              >
-                Export Excel
-              </button>
-
-            </div>
-
-          </div>
-        )}
+        </Routes>
 
       </div>
     </div>
