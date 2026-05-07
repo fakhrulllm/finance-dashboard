@@ -36,7 +36,7 @@ function Register() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200 flex items-center justify-center">
 
       <form
         onSubmit={handleSubmit}
