@@ -40,7 +40,7 @@ function FinanceChart({ data }) {
 
       <div className="mb-5">
 
-        <h2 className="text-lg font-semibold text-slate-800">
+        <h2 className="font-semibold mb-4 text-sm md:text-base">
           Financial Overview
         </h2>
 

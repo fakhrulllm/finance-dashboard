@@ -19,7 +19,7 @@ function Navbar() {
   }
 
   return (
-    <div className="flex items-center justify-between bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
 
       <div>
         <h1 className="text-2xl font-bold text-slate-800">

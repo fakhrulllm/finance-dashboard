@@ -55,7 +55,7 @@ function Reports() {
 
       <Sidebar />
 
-      <div className="flex-1 p-8 space-y-8">
+      <div className="flex-1 p-4 md:p-8 space-y-6">
 
         <Navbar />
 

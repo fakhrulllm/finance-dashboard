@@ -26,8 +26,8 @@ function TransactionList({
                         key={item}
                         onClick={() => setFilter(item)}
                         className={`px-3 py-1 rounded capitalize transition ${filter === item
-                                ? "bg-blue-500 text-white"
-                                : "bg-gray-200 hover:bg-gray-300"
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-200 hover:bg-gray-300"
                             }`}
                     >
                         {item}
@@ -36,48 +36,52 @@ function TransactionList({
             </div>
 
             {/* LIST */}
-            <div className="space-y-4">
-                {data.length === 0 ? (
-                    <div className="text-center text-gray-400 py-10">
-                        <p className="text-lg">No transactions yet</p>
-                        <p className="text-sm">Start by adding your first transaction</p>
-                    </div>
-                ) : (
-                    data.map((item) => {
+            <div className="overflow-x-auto">
 
-                        const isIncome = item.type === "income"
+                <div className="space-y-4 min-w-[500px]">
+                    {data.length === 0 ? (
+                        <div className="text-center text-gray-400 py-10">
+                            <p className="text-lg">No transactions yet</p>
+                            <p className="text-sm">Start by adding your first transaction</p>
+                        </div>
+                    ) : (
+                        data.map((item) => {
 
-                        return (
-                            <div
-                                key={item.id}
-                                className="flex justify-between items-center py-2 border-b last:border-none"
-                            >
+                            const isIncome = item.type === "income"
 
-                                <div>
-                                    <p className="font-semibold">{item.name}</p>
-                                    <p className="text-sm text-gray-500">
-                                        {item.date}
-                                    </p>
+                            return (
+                                <div
+                                    key={item.id}
+                                    className="flex justify-between items-center py-2 border-b last:border-none"
+                                >
+
+                                    <div>
+                                        <p className="font-semibold">{item.name}</p>
+                                        <p className="text-sm text-gray-500">
+                                            {item.date}
+                                        </p>
+                                    </div>
+
+                                    <div className="flex items-center gap-4">
+                                        <p className={`font-bold ${isIncome ? "text-green-500" : "text-red-500"
+                                            }`}>
+                                            {isIncome ? "+" : "-"} {formatRupiah(item.amount)}
+                                        </p>
+
+                                        <button
+                                            onClick={() => onDelete(item.id)}
+                                            className="text-red-500 text-sm hover:underline"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+
                                 </div>
+                            )
+                        })
+                    )}
+                </div>
 
-                                <div className="flex items-center gap-4">
-                                    <p className={`font-bold ${isIncome ? "text-green-500" : "text-red-500"
-                                        }`}>
-                                        {isIncome ? "+" : "-"} {formatRupiah(item.amount)}
-                                    </p>
-
-                                    <button
-                                        onClick={() => onDelete(item.id)}
-                                        className="text-red-500 text-sm hover:underline"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-
-                            </div>
-                        )
-                    })
-                )}
             </div>
 
         </div>

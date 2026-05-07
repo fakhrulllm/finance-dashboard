@@ -11,7 +11,7 @@ function Sidebar() {
   ]
 
   return (
-    <div className="w-64 min-h-screen bg-gradient-to-b from-slate-950 to-blue-950 p-6">
+    <div className="hidden md:flex md:w-64 flex-col bg-gradient-to-b from-slate-900 via-blue-950 to-slate-900 min-h-screen p-6">
 
       {/* LOGO */}
       <div className="mb-12">

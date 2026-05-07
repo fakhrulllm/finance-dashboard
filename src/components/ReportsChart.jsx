@@ -20,7 +20,7 @@ function ReportsChart({ data }) {
           Monthly Financial Report
         </h2>
 
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm md:text-base text-slate-500 mt-1">
           Monthly income and expense summary
         </p>
 

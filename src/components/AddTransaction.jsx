@@ -9,11 +9,17 @@ function AddTransaction({ onAdd }) {
   })
 
   const handleChange = (e) => {
+
     const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: value }))
+
+    setForm(prev => ({
+      ...prev,
+      [name]: value
+    }))
   }
 
   const handleSubmit = (e) => {
+
     e.preventDefault()
 
     if (!form.name || !form.amount) return
@@ -26,44 +32,66 @@ function AddTransaction({ onAdd }) {
       date: new Date().toLocaleDateString("id-ID")
     })
 
-    setForm({ name: "", amount: "", type: "expense" })
+    setForm({
+      name: "",
+      amount: "",
+      type: "expense"
+    })
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white/80 backdrop-blur-md p-5 rounded-2xl shadow mt-6 space-y-3">
 
-      <h2 className="font-bold text-slate-800">Add Transaction</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white/80 backdrop-blur-md p-5 rounded-2xl shadow mt-6 space-y-4"
+    >
 
-      <input
-        name="name"
-        value={form.name}
-        onChange={handleChange}
-        placeholder="Nama transaksi"
-        className="w-full border p-2 rounded"
-      />
+      <h2 className="font-bold text-slate-800">
+        Add Transaction
+      </h2>
 
-      <input
-        name="amount"
-        value={form.amount}
-        onChange={handleChange}
-        type="number"
-        placeholder="Jumlah"
-        className="w-full border p-2 rounded"
-      />
+      {/* RESPONSIVE FORM */}
+      <div className="flex flex-col md:flex-row gap-4">
 
-      <select
-        name="type"
-        value={form.type}
-        onChange={handleChange}
-        className="w-full border p-2 rounded"
-      >
-        <option value="expense">Expense</option>
-        <option value="income">Income</option>
-      </select>
+        <input
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          placeholder="Transaction Name"
+          className="flex-1 border border-slate-300 p-3 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-      <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-        Tambah
-      </button>
+        <input
+          name="amount"
+          value={form.amount}
+          onChange={handleChange}
+          type="number"
+          placeholder="Amount"
+          className="flex-1 border border-slate-300 p-3 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        <select
+          name="type"
+          value={form.type}
+          onChange={handleChange}
+          className="border border-slate-300 p-3 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="expense">
+            Expense
+          </option>
+
+          <option value="income">
+            Income
+          </option>
+        </select>
+
+        <button
+          className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-xl transition whitespace-nowrap"
+        >
+          Add
+        </button>
+
+      </div>
 
     </form>
   )
