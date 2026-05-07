@@ -1,23 +1,45 @@
-function Navbar({ username, activeMenu }) {
-    return (
-        <div className="bg-white/70 dark:bg-gray-800/70 
-                backdrop-blur-md 
-                p-4 rounded-2xl 
-                shadow-sm flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-gray-700">
-                {activeMenu}
-            </h2>
+import { useNavigate } from "react-router-dom"
 
-            <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center">
-                    {username.charAt(0)}
-                </div>
-                <p className="text-gray-600 text-sm">
-                    {username}
-                </p>
-            </div>
-        </div>
-    )
+import useAuth from "../hooks/useAuth"
+
+function Navbar() {
+
+  const navigate = useNavigate()
+
+  const {
+    user,
+    logout
+  } = useAuth()
+
+  const handleLogout = () => {
+
+    logout()
+
+    navigate("/login")
+  }
+
+  return (
+    <div className="flex items-center justify-between bg-white p-5 rounded-2xl shadow">
+
+      <div>
+        <h1 className="text-2xl font-bold text-gray-800">
+          Welcome Back 👋
+        </h1>
+
+        <p className="text-gray-500">
+          {user?.name || "User"}
+        </p>
+      </div>
+
+      <button
+        onClick={handleLogout}
+        className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl transition"
+      >
+        Logout
+      </button>
+
+    </div>
+  )
 }
 
 export default Navbar
