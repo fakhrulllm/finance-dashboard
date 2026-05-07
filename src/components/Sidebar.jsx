@@ -18,18 +18,14 @@ function Sidebar() {
 
         <h1 className="text-2xl font-bold tracking-wide">
 
-          <span className="text-white">
-            Corporate
-          </span>
-
-          <span className="text-yellow-400 ml-2">
-            Finance
+          <span className="text-yellow-400">
+            FinTrack
           </span>
 
         </h1>
 
         <p className="text-slate-400 text-sm mt-1">
-          Control Center
+          Personal Finance Dashboard
         </p>
 
       </div>

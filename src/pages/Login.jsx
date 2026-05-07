@@ -4,57 +4,92 @@ import { Link, useNavigate } from "react-router-dom"
 import useAuth from "../hooks/useAuth"
 
 function Login() {
+
   const navigate = useNavigate()
+
   const { login } = useAuth()
 
   const [name, setName] = useState("")
   const [password, setPassword] = useState("")
 
   const handleSubmit = (e) => {
+
     e.preventDefault()
 
     try {
+
       login(name, password)
+
       navigate("/")
+
     } catch (err) {
+
       alert(err.message)
+
     }
+
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-slate-100">
+
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-2xl shadow w-80 space-y-4"
+        className="bg-white w-96 p-8 rounded-2xl border border-slate-200 shadow-sm space-y-5"
       >
-        <h1 className="text-2xl font-bold text-center">
-          Login
-        </h1>
 
+        {/* HEADER */}
+        <div className="text-center">
+
+          <h1 className="text-3xl font-bold text-slate-800">
+             Welcome to FinTrack
+          </h1>
+
+          <p className="text-slate-500 mt-2 text-sm">
+            Manage your personal finances smarter
+          </p>
+
+        </div>
+
+        {/* USERNAME */}
         <input
+          type="text"
           placeholder="Username"
-          className="w-full border p-3 rounded-lg"
+          className="w-full border border-slate-300 p-3 rounded-xl outline-none focus:ring-2 focus:ring-blue-700"
           onChange={(e) => setName(e.target.value)}
         />
 
+        {/* PASSWORD */}
         <input
           type="password"
           placeholder="Password"
-          className="w-full border p-3 rounded-lg"
+          className="w-full border border-slate-300 p-3 rounded-xl outline-none focus:ring-2 focus:ring-blue-700"
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-lg">
-          Login
+        {/* BUTTON */}
+        <button
+          className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-xl transition font-medium"
+        >
+          Sign In
         </button>
 
-        <p className="text-center text-sm">
-          Belum punya akun?
-          <Link to="/register" className="text-teal-600 ml-1">
+        {/* FOOTER */}
+        <p className="text-center text-sm text-slate-500">
+
+          Don't have an account?
+
+          <Link
+            to="/register"
+            className="text-blue-700 font-medium ml-1 hover:underline"
+          >
             Register
           </Link>
+
         </p>
+
       </form>
+
     </div>
   )
 }
