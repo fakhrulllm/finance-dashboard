@@ -51,7 +51,7 @@ function Reports() {
   }))
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-teal-50 via-white to-teal-100">
+    <div className="flex min-h-screen bg-slate-100">
 
       <Sidebar />
 

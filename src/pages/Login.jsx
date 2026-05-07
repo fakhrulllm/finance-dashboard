@@ -44,7 +44,7 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button className="w-full bg-teal-600 text-white py-3 rounded-lg">
+        <button className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-lg">
           Login
         </button>
 

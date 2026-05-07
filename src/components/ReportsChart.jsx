@@ -5,27 +5,67 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  Legend
+  Legend,
+  CartesianGrid
 } from "recharts"
 
 function ReportsChart({ data }) {
-  return (
-    <div className="bg-white dark:bg-gray-800 p-5 rounded shadow">
-      <h2 className="font-bold mb-4 text-gray-700 dark:text-white">
-        Monthly Report
-      </h2>
 
-      <ResponsiveContainer width="100%" height={300}>
+  return (
+    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+
+      <div className="mb-5">
+
+        <h2 className="text-lg font-semibold text-slate-800">
+          Monthly Financial Report
+        </h2>
+
+        <p className="text-sm text-slate-500 mt-1">
+          Monthly income and expense summary
+        </p>
+
+      </div>
+
+      <ResponsiveContainer width="100%" height={320}>
+
         <BarChart data={data}>
-          <XAxis dataKey="month" />
-          <YAxis />
+
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#e2e8f0"
+          />
+
+          <XAxis
+            dataKey="month"
+            tick={{ fill: "#64748b", fontSize: 12 }}
+          />
+
+          <YAxis
+            tick={{ fill: "#64748b", fontSize: 12 }}
+          />
+
           <Tooltip />
+
           <Legend />
 
-          <Bar dataKey="income" fill="#14b8a6" />
-          <Bar dataKey="expense" fill="#ef4444" />
+          {/* INCOME */}
+          <Bar
+            dataKey="income"
+            fill="#1D4ED8"
+            radius={[8, 8, 0, 0]}
+          />
+
+          {/* EXPENSE */}
+          <Bar
+            dataKey="expense"
+            fill="#EF4444"
+            radius={[8, 8, 0, 0]}
+          />
+
         </BarChart>
+
       </ResponsiveContainer>
+
     </div>
   )
 }

@@ -2,5 +2,5 @@
 @tailwind components;
 @tailwind utilities;
 body {
-  background: linear-gradient(135deg, #e6fffa, #ffffff);
+  font-family: "Inter", sans-serif;
 }

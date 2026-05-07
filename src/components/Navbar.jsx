@@ -19,10 +19,10 @@ function Navbar() {
   }
 
   return (
-    <div className="flex items-center justify-between bg-white p-5 rounded-2xl shadow">
+    <div className="flex items-center justify-between bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
 
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">
+        <h1 className="text-2xl font-bold text-slate-800">
           Welcome Back 👋
         </h1>
 

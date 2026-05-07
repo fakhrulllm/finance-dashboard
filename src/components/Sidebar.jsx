@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom"
 
 function Sidebar() {
+
   const location = useLocation()
 
   const menu = [
@@ -10,32 +11,51 @@ function Sidebar() {
   ]
 
   return (
-    <div className="w-64 bg-gradient-to-b from-teal-700 to-teal-900 text-white p-6">
+    <div className="w-64 min-h-screen bg-gradient-to-b from-slate-950 to-blue-950 p-6">
 
       {/* LOGO */}
-      <div className="flex items-center gap-3 mb-10">
-        <h1 className="text-xl font-bold">
-          <span className="text-white">Finance</span>{" "}
-          <span className="text-teal-200">Dashboard</span>
+      <div className="mb-12">
+
+        <h1 className="text-2xl font-bold tracking-wide">
+
+          <span className="text-white">
+            Corporate
+          </span>
+
+          <span className="text-yellow-400 ml-2">
+            Finance
+          </span>
+
         </h1>
+
+        <p className="text-slate-400 text-sm mt-1">
+          Control Center
+        </p>
+
       </div>
 
       {/* MENU */}
       <ul className="space-y-3">
+
         {menu.map((item, index) => (
+
           <li key={index}>
+
             <Link
               to={item.path}
-              className={`block px-3 py-2 rounded-lg transition ${
+              className={`block px-4 py-3 rounded-xl transition-all duration-200 ${
                 location.pathname === item.path
-                  ? "bg-white text-teal-700 font-semibold"
-                  : "hover:bg-teal-700"
+                  ? "bg-blue-700 text-white font-semibold shadow-sm"
+                  : "text-slate-300 hover:bg-slate-800 hover:text-white"
               }`}
             >
               {item.name}
             </Link>
+
           </li>
+
         ))}
+
       </ul>
 
     </div>

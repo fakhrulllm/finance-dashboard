@@ -32,7 +32,7 @@ function AddTransaction({ onAdd }) {
   return (
     <form onSubmit={handleSubmit} className="bg-white/80 backdrop-blur-md p-5 rounded-2xl shadow mt-6 space-y-3">
 
-      <h2 className="font-bold text-lg">Add Transaction</h2>
+      <h2 className="font-bold text-slate-800">Add Transaction</h2>
 
       <input
         name="name"

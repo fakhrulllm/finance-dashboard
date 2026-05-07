@@ -8,21 +8,18 @@ function Card({ title, value = 0 }) {
   }
 
   return (
-    <div className="bg-white/70 dark:bg-gray-800/70 
-                backdrop-blur-lg 
-                p-5 rounded-2xl 
-                shadow-md hover:shadow-xl 
-                transition duration-300 
-                border border-white/20">
+    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
 
-      <h3 className="text-gray-500 text-sm">{title}</h3>
+      <h3 className="text-slate-500 text-sm font-medium">
+        {title}
+      </h3>
 
-      <p className="text-2xl font-bold text-gray-800 mt-2">
+      <p className="text-3xl font-bold text-slate-800 mt-3">
         {formatRupiah(value)}
       </p>
 
-      {/* garis bawah aesthetic */}
-      <div className="mt-3 h-1 rounded bg-gradient-to-r from-teal-400 to-teal-600"></div>
+      {/* accent line */}
+      <div className="mt-4 h-1 rounded-full bg-gradient-to-r from-blue-700 to-blue-500"></div>
 
     </div>
   )

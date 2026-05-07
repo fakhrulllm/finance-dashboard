@@ -1,69 +1,99 @@
 import {
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    Tooltip,
-    ResponsiveContainer,
-    CartesianGrid
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid
 } from "recharts"
 
 function FinanceChart({ data }) {
 
-    // grouping per tanggal
-    const grouped = data.reduce((acc, item) => {
-        const date = item.date
+  // GROUP BY DATE
+  const grouped = data.reduce((acc, item) => {
 
-        if (!acc[date]) {
-            acc[date] = { date, income: 0, expense: 0 }
-        }
+    const date = item.date
 
-        if (item.type === "income") {
-            acc[date].income += item.amount
-        } else {
-            acc[date].expense += item.amount
-        }
+    if (!acc[date]) {
+      acc[date] = {
+        date,
+        income: 0,
+        expense: 0
+      }
+    }
 
-        return acc
-    }, {})
+    if (item.type === "income") {
+      acc[date].income += Number(item.amount)
+    } else {
+      acc[date].expense += Number(item.amount)
+    }
 
-    const chartData = Object.values(grouped)
+    return acc
 
-    return (
-        <div className="bg-white p-5 rounded-2xl shadow mt-6">
-            <h2 className="font-semibold mb-4 text-gray-700">
-                Financial Overview 📊
-            </h2>
+  }, {})
 
-            <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={chartData}>
+  const chartData = Object.values(grouped)
 
-                    <CartesianGrid strokeDasharray="3 3" />
+  return (
+    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mt-6">
 
-                    <XAxis dataKey="date" />
-                    <YAxis />
+      <div className="mb-5">
 
-                    <Tooltip />
+        <h2 className="text-lg font-semibold text-slate-800">
+          Financial Overview
+        </h2>
 
-                    <Line
-                        type="monotone"
-                        dataKey="income"
-                        stroke="#14b8a6" // teal
-                        strokeWidth={3}
-                    />
+        <p className="text-sm text-slate-500 mt-1">
+          Income and expense analytics
+        </p>
 
-                    <Line
-                        type="monotone"
-                        dataKey="expense"
-                        stroke="#ef4444" // red
-                        strokeWidth={3}
-                    />
+      </div>
 
-                </LineChart>
-            </ResponsiveContainer>
+      <ResponsiveContainer width="100%" height={320}>
 
-        </div>
-    )
+        <LineChart data={chartData}>
+
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#e2e8f0"
+          />
+
+          <XAxis
+            dataKey="date"
+            tick={{ fill: "#64748b", fontSize: 12 }}
+          />
+
+          <YAxis
+            tick={{ fill: "#64748b", fontSize: 12 }}
+          />
+
+          <Tooltip />
+
+          {/* INCOME */}
+          <Line
+            type="monotone"
+            dataKey="income"
+            stroke="#1D4ED8"
+            strokeWidth={3}
+            dot={false}
+          />
+
+          {/* EXPENSE */}
+          <Line
+            type="monotone"
+            dataKey="expense"
+            stroke="#EF4444"
+            strokeWidth={3}
+            dot={false}
+          />
+
+        </LineChart>
+
+      </ResponsiveContainer>
+
+    </div>
+  )
 }
 
 export default FinanceChart

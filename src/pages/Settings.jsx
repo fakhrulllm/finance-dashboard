@@ -16,7 +16,7 @@ function Settings() {
   const handleReset = () => {
 
     const confirmReset =
-      window.confirm("Yakin hapus semua data?")
+      window.confirm("Are you sure you want to reset all transactions?")
 
     if (!confirmReset) return
 
@@ -27,7 +27,7 @@ function Settings() {
   const handleExport = () => {
 
     if (transactions.length === 0) {
-      alert("Tidak ada data untuk di export")
+      alert("No transaction data available")
       return
     }
 
@@ -35,7 +35,7 @@ function Settings() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-teal-50 via-white to-teal-100">
+    <div className="flex min-h-screen bg-slate-100">
 
       <Sidebar />
 
@@ -43,16 +43,19 @@ function Settings() {
 
         <Navbar />
 
-        <div className="bg-white p-6 rounded-2xl shadow space-y-6">
+        <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-8">
 
+          {/* HEADER */}
           <div>
-            <h1 className="text-2xl font-bold">
-              Settings
+
+            <h1 className="text-2xl font-bold text-slate-800">
+              System Management
             </h1>
 
-            <p className="text-gray-500">
-              Manage your finance dashboard data
+            <p className="text-slate-500 mt-1">
+              Manage financial data and export settings
             </p>
+
           </div>
 
           {/* ACTION BUTTONS */}
@@ -60,29 +63,30 @@ function Settings() {
 
             <button
               onClick={handleReset}
-              className="px-5 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition"
+              className="px-5 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl transition"
             >
-              Reset Data 🗑️
+              Reset Transactions
             </button>
 
             <button
               onClick={handleExport}
-              className="px-5 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl transition"
+              className="px-5 py-3 bg-blue-700 hover:bg-blue-800 text-white rounded-xl transition"
             >
-              Export Excel 📊
+              Export Financial Report
             </button>
 
           </div>
 
           {/* INFO */}
-          <div className="bg-teal-50 border border-teal-100 p-4 rounded-xl">
+          <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl">
 
-            <p className="text-sm text-gray-600">
-              Total stored transactions:
-              <span className="font-semibold ml-2">
-                {transactions.length}
-              </span>
+            <p className="text-sm text-slate-600">
+              Total Stored Transactions
             </p>
+
+            <h2 className="text-3xl font-bold text-slate-800 mt-2">
+              {transactions.length}
+            </h2>
 
           </div>
 
